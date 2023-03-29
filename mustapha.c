@@ -34,7 +34,7 @@ int main()
     
     case 3:
     // end of application
-    printf("Thank you!!");
+    printf("Thank you!!\n");
         break;
     }
     
