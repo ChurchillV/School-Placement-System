@@ -1,0 +1,2 @@
+General Science 80 70 60
+Arts 75 60 50

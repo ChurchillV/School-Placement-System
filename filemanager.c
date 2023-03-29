@@ -9,6 +9,18 @@
 int English, Maths, Science, Social, RME, BDT, GH_lang, French, ICT;
 int English_grade, Maths_grade, Science_grade, Social_grade, RME_grade, BDT_grade, GH_lang_grade, French_grade, ICT_grade;
 
+struct student {
+    char name[50];
+    char index_number[8];
+    int subject_results[9];
+    int total_score;
+};
+struct student students[1000];
+int num_students = 0;
+
+//The student file
+FILE* fp; 
+
 char eng[25] = "English";
 char math[25] = "Maths";
 char sci[25] = "Science";
@@ -24,10 +36,14 @@ int grade_calc(int score);
 int two_best(int[]);
 int calculate_aggregate();
 void save_student_data(char name[], int index, int aggregate, char school[]);
+void update_student_file(char name[], int index, int results[]);
+void show_student_data();
+int count_students(FILE *file);
 
 int main() {
 
     //Clear screen on startup
+    main_menu:
     system("cls");
     printf("\n\n##### WELCOME TO GROUP 14'S SCHOOL PLACEMENT SYSTEM #####\n\n");
     printf("Press any key to continue\n\n");
@@ -39,6 +55,7 @@ int main() {
 
     //New Student Registration Section begins
     if (option == 1) {
+        registration:
         system("cls");
         printf("##### New Student Registration #####\n\n");
         printf("\nRegister a New Student");
@@ -99,7 +116,7 @@ int main() {
         ICT_grade = grade_calc(ICT);
 
         verify:
-        int option;
+        char option;
         printf("\n\n### CONFIRMATION ###\n\nAre you sure you want to submit your results?\n\n1.Yes, submit results\n\n2.No (Re-enter results)\n\nOption: ");
         scanf("%c", &option);
         switch (option)
@@ -114,6 +131,7 @@ int main() {
         
         default:
             printf("Invalid option. Please try again\n");
+            goto verify;
             break;
         }
 
@@ -133,19 +151,75 @@ int main() {
         }
 
         save_student_data(name, index_no,aggregate, school);
-        
+        printf("\nRegister another student?\n1 - Yes\n2 - No\n\tOption: ");
+        fflush(stdin);
+        scanf("%c", &option);
+        switch (option)
+            {
+            case '1':
+                goto registration;
+                break;
+
+            case '2':
+                choice:
+                printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
+                fflush(stdin);
+                scanf("%c", &option);
+                switch (option)
+                    {
+                    case '1':
+                        goto main_menu;
+                        break;
+
+                    case '2':
+                        goto close;
+                        break;
+
+                    default:
+                        printf("Invalid option. Please try again\n");
+                        goto choice;
+                        break;
+                    }
+
+                break;
+            
+            default:
+                printf("Invalid option. Please try again\n");
+                break;
+            }
     }
     //New Student Registration Section Ends
 
 
     //Placement Checking Section Begins
     else if(option == 2) {
-        printf("Congrats!! You were admitted");
+        show_student_data();
+        choose:
+        printf("\n##### STUDENT DETAILS READ SUCCESSFULLY #####\n");
+        printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
+        fflush(stdin);
+        scanf("%c", &option);
+        switch (option)
+            {
+            case '1':
+                goto main_menu;
+                break;
+
+            case '2':
+                goto close;
+                break;
+                
+            default:
+                printf("Invalid option. Please try again\n");
+                goto choose;
+                break;
+            }
     }
     //Placement Checking Section Ends
 
 
     else if(option == 3) {
+        close:
         printf("\nThank you for using the Group 14 Placement Application.");
     }
     return 0;
@@ -239,3 +313,49 @@ void save_student_data(char name[], int index, int aggregate, char school[]) {
 
     printf("\n\nPlacement Details saved successfully");
 }
+
+//Function to update student file
+void update_student_file(char name[], int index, int results[]) {
+    fp = fopen("students.txt", "a");
+}
+
+//Function to check list of students & details
+void show_student_data() {
+    fp = fopen("students.txt", "r");
+    if (fp == NULL) {
+        printf("Could not open file\n");
+        exit(1);
+    }
+
+    while (fscanf(fp, "%s %s", students[num_students].name, students[num_students].index_number) != EOF) {
+        for (int i = 0; i < 9; i++) {
+            fscanf(fp, "%d", &students[num_students].subject_results[i]);
+            students[num_students].total_score += students[num_students].subject_results[i];
+        }
+        num_students++;
+    }
+
+    fclose(fp);
+
+    printf("NAME\t|\tINDEX NO\t|\tRAW SCORE\n");
+    printf("-------------------------------------------------\n");
+    for (int i = 0; i < num_students; i++) {
+        printf("%s\t|\t%s  \t|\t%d\n", students[i].name, students[i].index_number, students[i].total_score);
+    }
+
+}
+
+
+//Function to count the number of lines(students) in the student file
+// int count_students(FILE *file) {
+//     int count = 0;
+//     char ch;
+
+//     while ((ch = fgetc(file)) != EOF) {
+//         if (ch == '\n') {
+//             count++;
+//         }
+//     }
+
+//     return count;
+// }
