@@ -38,7 +38,6 @@ int calculate_aggregate();
 void save_student_data(char name[], int index, int aggregate, char school[]);
 void update_student_file(char name[], int index, int results[]);
 void show_student_data();
-int count_students(FILE *file);
 
 int main() {
 
