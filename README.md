@@ -9,7 +9,7 @@ Description:
   
   * Read a file with school courses offered and their cut off marks
   
-  * Place students in schools baed on grades and cut-off marks
+  * Place students in schools based on grades and cut-off marks
   
   ***
  
