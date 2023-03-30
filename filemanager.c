@@ -21,16 +21,6 @@ int num_students = 0;
 //The student file
 FILE* fp; 
 
-char eng[25] = "English";
-char math[25] = "Maths";
-char sci[25] = "Science";
-char soc[25] = "Social Studies";
-char rme[25] = "RME";
-char bdt[25] = "BDT";
-char ghlang[25] = "Gh. Language";
-char fre[25] = "French";
-char ict[25] = "ICT";
-
 int get_grade(int score, char name[]);
 int grade_calc(int score);
 int two_best(int[]);
@@ -87,31 +77,31 @@ int main() {
         score_section:
         printf("\nEnter Results: \n");
         
-        English = get_grade(English, eng);
+        English = get_grade(English, "ENGLISH");
         English_grade = grade_calc(English);
 
-        Maths = get_grade(Maths, math);
+        Maths = get_grade(Maths, "MATHS");
         Maths_grade = grade_calc(Maths);
 
-        Science = get_grade(Science, sci);
+        Science = get_grade(Science, "SCIENCE");
         Science_grade = grade_calc(Science);
 
-        Social = get_grade(Social, soc);
+        Social = get_grade(Social, "SOCIAL STUDIES");
         Social_grade = grade_calc(Social);
 
-        RME = get_grade(RME, rme);
+        RME = get_grade(RME, "RME");
         RME_grade = grade_calc(RME);
 
-        BDT = get_grade(BDT, bdt);
+        BDT = get_grade(BDT, "BDT");
         BDT_grade = grade_calc(BDT);
 
-        GH_lang = get_grade(GH_lang, ghlang);
+        GH_lang = get_grade(GH_lang, "GH. LANGUAGE");
         GH_lang_grade = grade_calc(GH_lang);
 
-        French = get_grade(French, fre);
+        French = get_grade(French, "FRENCH");
         French_grade = grade_calc(French);
 
-        ICT = get_grade(ICT, ict);
+        ICT = get_grade(ICT, "ICT");
         ICT_grade = grade_calc(ICT);
 
         verify:
@@ -140,7 +130,7 @@ int main() {
 
         system("cls");
         printf("\n\n####GRADING AND SCHOOL PLACEMENT####");
-        printf("\nEnglish:\t%d\nMaths:\t\t%d\nScience:\t%d\nSocial Studies:\t%d\nRME:\t\t%d\nBDT:\t\t%d\nGh. Language:\t%d\nFrench:\t\t%d\nICT:\t\t%d", English_grade,Maths_grade,Science_grade,Social_grade,RME_grade,BDT_grade,GH_lang_grade,French_grade,ICT_grade);
+        printf("\nENGLSIH:\t%d\nMATHS:\t\t%d\nSCIENCE:\t%d\nSOCIAL STUDIES:\t%d\nRME:\t\t%d\nBDT:\t\t%d\nGH. LANGUAGE:\t%d\nFRENCH:\t\t%d\nICT:\t\t%d", English_grade,Maths_grade,Science_grade,Social_grade,RME_grade,BDT_grade,GH_lang_grade,French_grade,ICT_grade);
         int aggregate = calculate_aggregate();
         if (aggregate > 9){
             printf("\nAggregate:\t%d", aggregate);
