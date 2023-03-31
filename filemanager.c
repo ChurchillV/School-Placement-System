@@ -43,8 +43,8 @@ int main() {
     printf("\n\t### WHERE ARE YOU GOING? ");
     scanf("%d", &option);
 
-    //New Student Registration Section begins
     if (option == 1) {
+    //New Student Registration Section begins
         registration:
         system("cls");
         printf("##### New Student Registration #####\n\n");
@@ -195,14 +195,14 @@ int main() {
         Sleep(300);
         printf("\nSearching for Student details...\n");
 
-        FILE *file = fopen("students.txt", "r");
-        if (!file) {
+        fp = fopen("students.txt", "r");
+        if (!fp) {
             printf("Could not open file.");
             return 1;
         }
 
         char line[100];
-        while (fgets(line, sizeof(line), file)) {
+        while (fgets(line, sizeof(line), fp)) {
             int read_index;
             char name[50], gender, last_name[50];
             int scores[9];
@@ -214,12 +214,11 @@ int main() {
                 for (int i = 0; i < 9; i++) {
                     total_score += scores[i];
                 }
-                //fclose(file);
 
                 FILE *cutoffs_file = fopen("cutoffs.txt", "r");
                 if (!cutoffs_file) {
-                    printf("Could not open file cutoffs.txt.\n");
-                    fclose(file);
+                    printf("Could not open fp cutoffs.txt.\n");
+                    fclose(fp);
                     return 1;
                 }
                 char grade;
@@ -239,7 +238,7 @@ int main() {
                 char filename[50];
                 sprintf(filename, "%d.txt", index_number);
                 FILE *output_file = fopen(filename, "w");
-                fprintf(output_file, "Name: %s\nIndex number: %d\nSchool: %s\nAggregate: %d\nTotal score: %d", name, index_number, choose_school(grade,gender), aggregate, total_score);
+                fprintf(output_file, "Name: %s\nIndex number: %d\nSchool: %s\nAggregate: %d\nRaw score: %d", name, index_number, choose_school(grade,gender), aggregate, total_score);
                 fclose(output_file);
             }
         }
@@ -375,16 +374,16 @@ int calculate_aggregate() {
     return aggregate;
 }
 
-//Function to save student data into a file
+//Function to save student data into a fp
 void save_student_data(char name[], char index[], int aggregate, char gender) {
     //Create File and name it with the index number
     char file_name[50];
     FILE *file_ptr = fopen("students.txt", "a");
 
-    //Write to the file
+    //Write to the fp
     fprintf(file_ptr, "\n%s %s %d %d %d %d %d %d %d %d %d  %d %c", name, index, English, Maths, Science, Social, RME, BDT, GH_lang, French, ICT, aggregate, gender);
 
-    //Close file
+    //Close fp
     fclose(file_ptr);
 
     printf("\n\n##### PLACEMENT DETAILS SAVED SUCCESSFULLY #####");
@@ -407,7 +406,7 @@ char* choose_school(char grade, char gender) {
 
     FILE *school_file = fopen(filename, "r");
     if (!school_file) {
-        printf("Could not open file %s.\n", filename);
+        printf("Could not open fp %s.\n", filename);
         return NULL;
     }
 
