@@ -191,7 +191,7 @@ int main() {
     else if(option == 2) {
         int index_number;
         placement_check:
-        printf("Enter your index number: ");
+        printf("Enter student index number: ");
         scanf("%d", &index_number);
         Sleep(300);
         printf("\nSearching for Student details...\n");
@@ -269,7 +269,27 @@ int main() {
 
         }
 
-        choose:
+        // choose:
+        // fflush(stdin);
+        // printf("\n##### STUDENT PLACEMENT SUCCESSFUL #####\n");
+        // printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
+        // scanf("%c", &option);
+        // switch (option)
+        //     {
+        //     case '1':
+        //         goto main_menu;
+        //         break;
+
+        //     case '2':
+        //         goto close;
+        //         break;
+                
+        //     default:
+        //         printf("Invalid option. Please try again\n");
+        //         goto choose;
+        //         break;
+        //     }
+        choisir:
         fflush(stdin);
         printf("\n##### WHERE WOULD YOU LIKE TO GO? #####\n");
         printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
@@ -286,7 +306,7 @@ int main() {
                 
             default:
                 printf("Invalid option. Please try again\n");
-                goto choose;
+                goto choisir;
                 break;
             }
     }
@@ -422,7 +442,6 @@ char* choose_school(char grade, char gender) {
         i++;
     }
     fclose(school_file);
-
     srand(time(NULL));
     int school_index = rand() % i;
     char* school = (char*) malloc(sizeof(char) * strlen(schools[school_index]));
