@@ -26,8 +26,7 @@ int get_grade(int score, char name[]);
 int grade_calc(int score);
 int two_best(int[]);
 int calculate_aggregate();
-void save_student_data(char name[], char index[], int aggregate, char school[], char gender);
-void update_student_file(char name[], int index, int results[]);
+void save_student_data(char name[], char index[], int aggregate, char gender);
 char* choose_school(char grade, char gender);
 
 int main() {
@@ -41,6 +40,7 @@ int main() {
     printf("\n##### MAIN MENU #####\n");
     printf("\n1 - REGISTER NEW STUDENT\n2 - PLACEMENT CHECKER\n3 - EXIT\n");
     int option;
+    printf("\n\t### WHERE ARE YOU GOING? ");
     scanf("%d", &option);
 
     //New Student Registration Section begins
@@ -48,7 +48,7 @@ int main() {
         registration:
         system("cls");
         printf("##### New Student Registration #####\n\n");
-        printf("\nRegister a New Student");
+        Sleep(300);
         printf("\n\nName: ");
         fflush(stdin);
         char name[255];
@@ -56,6 +56,7 @@ int main() {
 
        char index_no[8];
         do{
+        Sleep(300);
         printf("\nIndex Number: ");
         scanf("%7s", &index_no);
         if (strlen(index_no) != 7){
@@ -66,6 +67,7 @@ int main() {
 
         char gender;
         gender_section:
+        Sleep(300);
         printf("\nGender: M/F\t");
         fflush(stdin);
         scanf("%c", &gender);        
@@ -74,40 +76,35 @@ int main() {
             goto gender_section;
         }
 
-        char school[255];
-        printf("\nChoice of School: ");
-        fflush(stdin);
-        gets(school);
-
         int results[9];
 
         score_section:
         printf("\nEnter Results: \n");
-        
+        Sleep(300);
         English = get_grade(English, "ENGLISH");
         English_grade = grade_calc(English);
-
+        Sleep(300);
         Maths = get_grade(Maths, "MATHS");
         Maths_grade = grade_calc(Maths);
-
+        Sleep(300);
         Science = get_grade(Science, "SCIENCE");
         Science_grade = grade_calc(Science);
-
+        Sleep(300);
         Social = get_grade(Social, "SOCIAL STUDIES");
         Social_grade = grade_calc(Social);
-
+        Sleep(300);
         RME = get_grade(RME, "RME");
         RME_grade = grade_calc(RME);
-
+        Sleep(300);
         BDT = get_grade(BDT, "BDT");
         BDT_grade = grade_calc(BDT);
-
+        Sleep(300);
         GH_lang = get_grade(GH_lang, "GH. LANGUAGE");
         GH_lang_grade = grade_calc(GH_lang);
-
+        Sleep(300);
         French = get_grade(French, "FRENCH");
         French_grade = grade_calc(French);
-
+        Sleep(300);
         ICT = get_grade(ICT, "ICT");
         ICT_grade = grade_calc(ICT);
 
@@ -146,7 +143,7 @@ int main() {
             printf("\nAggregate:\t0%d", aggregate);
         }
 
-        save_student_data(name, index_no,aggregate, school, gender);
+        save_student_data(name, index_no, aggregate, gender);
         printf("\nRegister another student?\n1 - Yes\n2 - No\n\tOption: ");
         fflush(stdin);
         scanf("%c", &option);
@@ -189,6 +186,8 @@ int main() {
 
     //Placement Checking Section Begins
     else if(option == 2) {
+        system("cls");
+        printf("##### SCHOOL PLACEMENT PROGRAMME #####\n\n");
         int index_number;
         placement_check:
         printf("Enter student index number: ");
@@ -205,10 +204,10 @@ int main() {
         char line[100];
         while (fgets(line, sizeof(line), file)) {
             int read_index;
-            char name[50], gender;
+            char name[50], gender, last_name[50];
             int scores[9];
             int aggregate;
-            sscanf(line, "%s %d %d %d %d %d %d %d %d %d %d %d %c", name, &read_index, &scores[0], &scores[1], &scores[2], &scores[3], &scores[4], &scores[5], &scores[6], &scores[7], &scores[8], &aggregate, &gender);
+            sscanf(line, "%s %s %d %d %d %d %d %d %d %d %d %d %d %c", name, last_name, &read_index, &scores[0], &scores[1], &scores[2], &scores[3], &scores[4], &scores[5], &scores[6], &scores[7], &scores[8], &aggregate, &gender);
 
             if (read_index == index_number) {
                 int total_score = 0;
@@ -243,54 +242,35 @@ int main() {
                 fprintf(output_file, "Name: %s\nIndex number: %d\nSchool: %s\nAggregate: %d\nTotal score: %d", name, index_number, choose_school(grade,gender), aggregate, total_score);
                 fclose(output_file);
             }
-
-            // else if (read_index != index_number && fgets(line, sizeof(line), file) == NULL) {
-                //  printf("No student with that index number found.\n");
-                // fclose(file);
-                // decide:
-                // fflush(stdin);
-                // printf("\nWould you like to try again?\n1 - YES\n2 - NO\nOption: ");
-                // scanf("%c", &option);
-                // switch (option)
-                // {
-                // case '1':
-                //     goto placement_check;
-                //     break;
-                
-                // case '2':
-                //     break;
-                
-                // default:
-                //     printf("Invalid option. Please try again\n");
-                //     goto decide;
-                //     break;
-                // }
-            // }
-
         }
+        choose:
+        fflush(stdin);
+        printf("\n##### STUDENT PLACEMENT SUCCESSFUL #####\n");
+        printf("\n1 - Place another student\n2 - Go to main menu\n3 - Exit\n\n\tOption: ");
+        scanf("%c", &option);
+        switch (option)
+            {
+            case '1':
+                goto placement_check;
+                break;
 
-        // choose:
-        // fflush(stdin);
-        // printf("\n##### STUDENT PLACEMENT SUCCESSFUL #####\n");
-        // printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
-        // scanf("%c", &option);
-        // switch (option)
-        //     {
-        //     case '1':
-        //         goto main_menu;
-        //         break;
-
-        //     case '2':
-        //         goto close;
-        //         break;
+            case '2':
+                goto main_menu;
+                break;
                 
-        //     default:
-        //         printf("Invalid option. Please try again\n");
-        //         goto choose;
-        //         break;
-        //     }
+            case '3':
+                goto close;
+                break;
+
+            default:
+                printf("Invalid option. Please try again\n");
+                goto choose;
+                break;
+            }
+
         choisir:
         fflush(stdin);
+        option_menu:
         printf("\n##### WHERE WOULD YOU LIKE TO GO? #####\n");
         printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
         scanf("%c", &option);
@@ -314,7 +294,9 @@ int main() {
 
 
     else if(option == 3) {
+        //Programme Ends
         close:
+        Sleep(300);
         printf("\nThank you for using the Group 14 Placement Application.");
     }
 
@@ -394,7 +376,7 @@ int calculate_aggregate() {
 }
 
 //Function to save student data into a file
-void save_student_data(char name[], char index[], int aggregate, char school[], char gender) {
+void save_student_data(char name[], char index[], int aggregate, char gender) {
     //Create File and name it with the index number
     char file_name[50];
     FILE *file_ptr = fopen("students.txt", "a");
@@ -406,11 +388,6 @@ void save_student_data(char name[], char index[], int aggregate, char school[], 
     fclose(file_ptr);
 
     printf("\n\n##### PLACEMENT DETAILS SAVED SUCCESSFULLY #####");
-}
-
-//Function to update student file
-void update_student_file(char name[], int index, int results[]) {
-    fp = fopen("students.txt", "a");
 }
 
 //Placement Algorithm

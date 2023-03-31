@@ -1,6 +1,0 @@
-Name: Fiona
-Index number: 6789078
-School: Mfantsiman
-
-Aggregate: 6
-Total score: 801
