@@ -4,6 +4,7 @@
 #include <string.h>
 #include <windows.h>
 #include <ctype.h>
+#include <time.h>
 
 //Global Variables and Function declarations
 int English, Maths, Science, Social, RME, BDT, GH_lang, French, ICT;
@@ -25,12 +26,11 @@ int get_grade(int score, char name[]);
 int grade_calc(int score);
 int two_best(int[]);
 int calculate_aggregate();
-void save_student_data(char name[], int index, int aggregate, char school[]);
+void save_student_data(char name[], char index[], int aggregate, char school[], char gender);
 void update_student_file(char name[], int index, int results[]);
-void show_student_data();
+char* choose_school(char grade, char gender);
 
 int main() {
-
     //Clear screen on startup
     main_menu:
     system("cls");
@@ -38,7 +38,8 @@ int main() {
     printf("Press any key to continue\n\n");
     getch();
 
-    printf("\nOptions:\n\n1 - Register New\n2 - Check Placement\n3 - Exit\n");
+    printf("\n##### MAIN MENU #####\n");
+    printf("\n1 - REGISTER NEW STUDENT\n2 - PLACEMENT CHECKER\n3 - EXIT\n");
     int option;
     scanf("%d", &option);
 
@@ -53,9 +54,15 @@ int main() {
         char name[255];
         gets(name);
 
-        int index_no;
+       char index_no[8];
+        do{
         printf("\nIndex Number: ");
-        scanf("%d", &index_no);
+        scanf("%7s", &index_no);
+        if (strlen(index_no) != 7){
+            printf("\nInvalid index number!\nRe - enter your index number.\n");
+        }
+        }
+        while (strlen(index_no) != 7);
 
         char gender;
         gender_section:
@@ -129,7 +136,7 @@ int main() {
         Sleep(300);
 
         system("cls");
-        printf("\n\n####GRADING AND SCHOOL PLACEMENT####");
+        printf("\n\n#### STUDENT GRADING ####");
         printf("\nENGLSIH:\t%d\nMATHS:\t\t%d\nSCIENCE:\t%d\nSOCIAL STUDIES:\t%d\nRME:\t\t%d\nBDT:\t\t%d\nGH. LANGUAGE:\t%d\nFRENCH:\t\t%d\nICT:\t\t%d", English_grade,Maths_grade,Science_grade,Social_grade,RME_grade,BDT_grade,GH_lang_grade,French_grade,ICT_grade);
         int aggregate = calculate_aggregate();
         if (aggregate > 9){
@@ -139,7 +146,7 @@ int main() {
             printf("\nAggregate:\t0%d", aggregate);
         }
 
-        save_student_data(name, index_no,aggregate, school);
+        save_student_data(name, index_no,aggregate, school, gender);
         printf("\nRegister another student?\n1 - Yes\n2 - No\n\tOption: ");
         fflush(stdin);
         scanf("%c", &option);
@@ -151,6 +158,7 @@ int main() {
 
             case '2':
                 choice:
+                printf("\n##### WHERE WOULD YOU LIKE TO GO? #####\n");
                 printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
                 fflush(stdin);
                 scanf("%c", &option);
@@ -179,14 +187,92 @@ int main() {
     }
     //New Student Registration Section Ends
 
-
     //Placement Checking Section Begins
     else if(option == 2) {
-        show_student_data();
+        int index_number;
+        placement_check:
+        printf("Enter your index number: ");
+        scanf("%d", &index_number);
+        Sleep(300);
+        printf("\nSearching for Student details...\n");
+
+        FILE *file = fopen("students.txt", "r");
+        if (!file) {
+            printf("Could not open file.");
+            return 1;
+        }
+
+        char line[100];
+        while (fgets(line, sizeof(line), file)) {
+            int read_index;
+            char name[50], gender;
+            int scores[9];
+            int aggregate;
+            sscanf(line, "%s %d %d %d %d %d %d %d %d %d %d %d %c", name, &read_index, &scores[0], &scores[1], &scores[2], &scores[3], &scores[4], &scores[5], &scores[6], &scores[7], &scores[8], &aggregate, &gender);
+
+            if (read_index == index_number) {
+                int total_score = 0;
+                for (int i = 0; i < 9; i++) {
+                    total_score += scores[i];
+                }
+                //fclose(file);
+
+                FILE *cutoffs_file = fopen("cutoffs.txt", "r");
+                if (!cutoffs_file) {
+                    printf("Could not open file cutoffs.txt.\n");
+                    fclose(file);
+                    return 1;
+                }
+                char grade;
+                int lower_bound, upper_bound;
+                while (fscanf(cutoffs_file, "%c %d %d\n", &grade, &lower_bound, &upper_bound) != EOF) {
+                    if (aggregate >= lower_bound && aggregate <= upper_bound) {
+                        Sleep(300);
+                        system("cls");
+                        printf("NAME\t|\tINDEX NO\t|\tAGGREGATE\t|\tSCHOOL\n");
+                        printf("---------------------------------------------------------------------------\n");
+                        printf("%s\t|\t%d  \t|\t   %d  \t\t|\t%s\n", name, index_number, aggregate, choose_school(grade, gender));
+                        break;
+                    }
+                }
+                fclose(cutoffs_file);
+
+                char filename[50];
+                sprintf(filename, "%d.txt", index_number);
+                FILE *output_file = fopen(filename, "w");
+                fprintf(output_file, "Name: %s\nIndex number: %d\nSchool: %s\nAggregate: %d\nTotal score: %d", name, index_number, choose_school(grade,gender), aggregate, total_score);
+                fclose(output_file);
+            }
+
+            // else if (read_index != index_number && fgets(line, sizeof(line), file) == NULL) {
+                //  printf("No student with that index number found.\n");
+                // fclose(file);
+                // decide:
+                // fflush(stdin);
+                // printf("\nWould you like to try again?\n1 - YES\n2 - NO\nOption: ");
+                // scanf("%c", &option);
+                // switch (option)
+                // {
+                // case '1':
+                //     goto placement_check;
+                //     break;
+                
+                // case '2':
+                //     break;
+                
+                // default:
+                //     printf("Invalid option. Please try again\n");
+                //     goto decide;
+                //     break;
+                // }
+            // }
+
+        }
+
         choose:
-        printf("\n##### STUDENT DETAILS READ SUCCESSFULLY #####\n");
-        printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
         fflush(stdin);
+        printf("\n##### WHERE WOULD YOU LIKE TO GO? #####\n");
+        printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
         scanf("%c", &option);
         switch (option)
             {
@@ -210,6 +296,11 @@ int main() {
     else if(option == 3) {
         close:
         printf("\nThank you for using the Group 14 Placement Application.");
+    }
+
+    else {
+        printf("\nPlease enter a valid option.");
+        goto main_menu;
     }
     return 0;
 }
@@ -249,7 +340,6 @@ int grade_calc(int score) {
     else if (score >= 40 && score <= 59) {
         grade = 4;
     }
-
     else {
         grade = 5;
     }
@@ -283,24 +373,19 @@ int calculate_aggregate() {
     return aggregate;
 }
 
-
 //Function to save student data into a file
-void save_student_data(char name[], int index, int aggregate, char school[]) {
+void save_student_data(char name[], char index[], int aggregate, char school[], char gender) {
     //Create File and name it with the index number
     char file_name[50];
-    sprintf(file_name, "%d.txt", index);
-    FILE *file_ptr = fopen(file_name, "w");
+    FILE *file_ptr = fopen("students.txt", "a");
 
     //Write to the file
-    fprintf(file_ptr, "Name: %s\n", name);
-    fprintf(file_ptr, "Index number: %d\n", index);
-    fprintf(file_ptr, "Aggregate: %d\n", aggregate);
-    fprintf(file_ptr, "School: %s\n", school);
+    fprintf(file_ptr, "\n%s %s %d %d %d %d %d %d %d %d %d  %d %c", name, index, English, Maths, Science, Social, RME, BDT, GH_lang, French, ICT, aggregate, gender);
 
     //Close file
     fclose(file_ptr);
 
-    printf("\n\nPlacement Details saved successfully");
+    printf("\n\n##### PLACEMENT DETAILS SAVED SUCCESSFULLY #####");
 }
 
 //Function to update student file
@@ -308,43 +393,39 @@ void update_student_file(char name[], int index, int results[]) {
     fp = fopen("students.txt", "a");
 }
 
-//Function to check list of students & details
-void show_student_data() {
-    fp = fopen("students.txt", "r");
-    if (fp == NULL) {
-        printf("Could not open file\n");
-        exit(1);
-    }
-
-    while (fscanf(fp, "%s %s", students[num_students].name, students[num_students].index_number) != EOF) {
-        for (int i = 0; i < 9; i++) {
-            fscanf(fp, "%d", &students[num_students].subject_results[i]);
-            students[num_students].total_score += students[num_students].subject_results[i];
+//Placement Algorithm
+char* choose_school(char grade, char gender) {
+    char filename[50];
+    if (grade == 'A' || grade == 'a') {
+        if (gender == 'M' || gender == 'm') {
+            strcpy(filename, "A-Schools-Boys.txt");
+        } else {
+            strcpy(filename, "A-Schools-Girls.txt");
         }
-        num_students++;
+    } else if (grade == 'B' || grade == 'b') {
+        strcpy(filename, "B-Schools.txt");
+    } else {
+        strcpy(filename, "C-Schools.txt");
     }
 
-    fclose(fp);
-
-    printf("NAME\t|\tINDEX NO\t|\tRAW SCORE\n");
-    printf("-------------------------------------------------\n");
-    for (int i = 0; i < num_students; i++) {
-        printf("%s\t|\t%s  \t|\t%d\n", students[i].name, students[i].index_number, students[i].total_score);
+    FILE *school_file = fopen(filename, "r");
+    if (!school_file) {
+        printf("Could not open file %s.\n", filename);
+        return NULL;
     }
 
+    char schools[10][50];
+    int i = 0;
+    char line[50];
+    while (fgets(line, sizeof(line), school_file)) {
+        strcpy(schools[i], line);
+        i++;
+    }
+    fclose(school_file);
+
+    srand(time(NULL));
+    int school_index = rand() % i;
+    char* school = (char*) malloc(sizeof(char) * strlen(schools[school_index]));
+    strcpy(school, schools[school_index]);
+    return school;
 }
-
-
-//Function to count the number of lines(students) in the student file
-// int count_students(FILE *file) {
-//     int count = 0;
-//     char ch;
-
-//     while ((ch = fgetc(file)) != EOF) {
-//         if (ch == '\n') {
-//             count++;
-//         }
-//     }
-
-//     return count;
-// }
