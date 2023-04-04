@@ -4,6 +4,7 @@
 #include <string.h>
 #include <windows.h>
 #include <time.h>
+#include <ctype.h>
 
 //Global Variables and Function declarations
 int English, Maths, Science, Social, RME, BDT, GH_lang, French, ICT;
@@ -21,6 +22,7 @@ int num_students = 0;
 //The student file
 FILE* fp; 
 
+//Function declarations
 int get_grade(int score, char name[]);
 int grade_calc(int score);
 int two_best(int[]);
@@ -47,23 +49,42 @@ int main() {
     //New Student Registration Section begins
         registration:
         system("cls");
-        print_header("NEW STUDENT REGISTRATION\n\n");
+        print_header("NEW STUDENT REGISTRATION");
         Sleep(300);
-        printf("\n\nName: ");
+        printf("\n\nName ([Last] [First]): ");
         fflush(stdin);
         char name[255];
         gets(name);
+        int problem = 0;
+        for (int i = 0; i < strlen(name); i++){
+            if (isdigit(name[i])){
+                problem = 1;
+            }
+            if (problem == 1){
+                print_header("Invalid name. Please re-enter the name");
+                goto registration;
+            }
+        }
 
        char index_no[8];
+        int issue = 0;
         do{
         Sleep(300);
         printf("\nIndex Number: ");
         scanf("%7s", &index_no);
-        if (strlen(index_no) != 7){
-            printf("\nPlease enter a 7-digit index number.\n");
+        for (int i = 0; i < strlen(index_no); i++) {
+            if (!(isdigit(index_no[i]))) {
+                issue = 1;
+                printf("\n###ERROR###\n\nPlease enter a valid index number.\n");
+                break;
+            }
         }
+            if (strlen(index_no) != 7) {
+            printf("\n###ERROR###\n\nPlease enter a 7-digit index number.\n");
+            issue = 1;
+            }
         }
-        while (strlen(index_no) != 7);
+        while (issue == 1);
 
         char gender;
         do {
@@ -87,31 +108,22 @@ int main() {
 
         score_section:
         printf("\nEnter Results (SCORE OUT OF 100): \n");
-        Sleep(300);
         English = get_grade(English, "ENGLISH");
         English_grade = grade_calc(English);
-        Sleep(300);
         Maths = get_grade(Maths, "MATHS");
         Maths_grade = grade_calc(Maths);
-        Sleep(300);
         Science = get_grade(Science, "SCIENCE");
         Science_grade = grade_calc(Science);
-        Sleep(300);
         Social = get_grade(Social, "SOCIAL STUDIES");
         Social_grade = grade_calc(Social);
-        Sleep(300);
         RME = get_grade(RME, "RME");
         RME_grade = grade_calc(RME);
-        Sleep(300);
         BDT = get_grade(BDT, "BDT");
         BDT_grade = grade_calc(BDT);
-        Sleep(300);
         GH_lang = get_grade(GH_lang, "GH. LANGUAGE");
         GH_lang_grade = grade_calc(GH_lang);
-        Sleep(300);
         French = get_grade(French, "FRENCH");
         French_grade = grade_calc(French);
-        Sleep(300);
         ICT = get_grade(ICT, "ICT");
         ICT_grade = grade_calc(ICT);
 
@@ -125,7 +137,7 @@ int main() {
             break;
 
         case '2':
-            printf("Re-enter your results. \n");
+            printf("Re-enter results. \n");
             goto score_section;
             break;
         
@@ -334,14 +346,12 @@ int main() {
         }
     //Placement Checking Section Ends
 
-
     else if(option == '3') {
         //Programme Ends
         close:
         Sleep(300);
         printf("\nThank you for using the Group 14 Placement Application.");
     }
-
     else {
         printf("\nPlease enter a valid option.");
         goto main_menu;
@@ -354,6 +364,7 @@ int main() {
 //Function for printing headings
 void print_header(char header[]) {
     printf("\n\n##### %s #####\n\n", header);
+    Sleep(800);
 }
 
 //Function to check for errors when entering scores
@@ -392,7 +403,7 @@ int grade_calc(int score) {
     else {
         grade = 5;
     }
-
+    Sleep(300);
     return grade;
 }
 
