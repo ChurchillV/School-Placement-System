@@ -81,7 +81,6 @@ int main() {
         }
             if (strlen(index_no) != 7) {
             printf("\n###ERROR###\n\nPlease enter a 7-digit index number.\n");
-            issue = 1;
             }
         }
         while (issue == 1);
@@ -128,8 +127,8 @@ int main() {
         ICT_grade = grade_calc(ICT);
 
         verify:
-        char option;
         printf("\n\n### CONFIRMATION ###\n\nAre you sure you want to submit your results?\n\n1.Yes, submit results\n\n2.No (Re-enter results)\n\nOption: ");
+        char option;
         scanf("%c", &option);
         switch (option)
         {
@@ -376,8 +375,8 @@ int get_grade(int score, char name[]) {
             printf("Invalid score. Please enter a number.\n");
             fflush(stdin);
         }
-        else if (score > 100) {
-            printf("Enter a score between 1-100\n");
+        else if (score > 100 || score < 0) {
+            printf("Please enter a score between 1-100\n");
         }
         else {break;}
     }
@@ -477,7 +476,7 @@ char* choose_school(char grade, char gender) {
     }
     fclose(school_file);
     srand(time(NULL));
-    int school_index = rand() % i;
+    int school_index = rand() % i;  //Randomly Select a school from the list
     char* school = (char*) malloc(sizeof(char) * strlen(schools[school_index]));
     strcpy(school, schools[school_index]);
     return school;
