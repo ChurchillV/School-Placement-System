@@ -1,0 +1,6 @@
+Name: Fiona
+Index number: 6789078
+School: St. James
+
+Aggregate: 6
+Raw score: 801

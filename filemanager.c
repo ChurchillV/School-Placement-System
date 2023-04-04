@@ -42,7 +42,7 @@ int main() {
     print_header("MAIN MENU");
     printf("\n1 - REGISTER NEW STUDENT\n2 - PLACEMENT CHECKER\n3 - EXIT\n");
     char option;
-    printf("\n\t### WHERE ARE YOU GOING? ");
+    printf("\n\t### WHERE ARE YOU GOING?\n");
     scanf("%c", &option);
 
     if (option == '1') {
@@ -127,8 +127,8 @@ int main() {
         ICT = get_grade(ICT, "ICT");
         ICT_grade = grade_calc(ICT);
 
-        verify:
         char option;
+        verify:
         printf("\n\n### CONFIRMATION ###\n\nAre you sure you want to submit your results?\n\n1.Yes, submit results\n\n2.No (Re-enter results)\n\nOption: ");
         scanf("%c", &option);
         switch (option)
@@ -142,6 +142,7 @@ int main() {
             break;
         
         default:
+            Sleep(300);
             printf("Invalid option. Please try again\n");
             goto verify;
             break;
