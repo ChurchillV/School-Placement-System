@@ -27,7 +27,7 @@ int get_grade(int score, char name[]);
 int grade_calc(int score);
 int two_best(int[]);
 int calculate_aggregate();
-void save_student_data(char name[], char index[], int aggregate, char gender);
+void save_student_data(char name[], char index[], int aggregate, char gender, char course[]);
 char* choose_school(char grade, char gender);
 void print_header(char header[]);
 
@@ -67,20 +67,22 @@ int main() {
         }
 
        char index_no[8];
-        int issue = 0;
+       int issue;
         do{
+        issue = 0;
         Sleep(300);
         printf("\nIndex Number: ");
         scanf("%7s", &index_no);
         for (int i = 0; i < strlen(index_no); i++) {
             if (!(isdigit(index_no[i]))) {
                 issue = 1;
-                printf("\n###ERROR###\n\nPlease enter a valid index number.\n");
+                printf("\n### There's something wrong with this index number ###\n\nPlease enter a valid index number.\n");
                 break;
             }
         }
             if (strlen(index_no) != 7) {
             printf("\n###ERROR###\n\nPlease enter a 7-digit index number.\n");
+            issue = 1;
             }
         }
         while (issue == 1);
@@ -102,6 +104,29 @@ int main() {
         }
         }
         while(gender != 'M' && gender != 'm' && gender != 'F' && gender != 'f');
+
+        char course[20];
+        do {
+        printf("\nChoice of Course:\n1 - GENERAL SCIENCE\n2 - GENERAL ARTS\n3 - VOCATIONAL STUDIES\n\tEnter option: ");
+        fflush(stdin);
+        scanf(" %c", &option);
+        switch (option)
+        {
+        case '1':
+            strcpy(course, "G.Science");
+            break;
+        case '2':
+            strcpy(course, "G.Arts");
+            break;
+        case '3':
+            strcpy(course, "Voc.Studies");
+            break;
+        
+        default:
+            printf("\n\n### Invalid option###\nPlease try again");
+            break;
+        }
+        } while (option > 3 && option < 1);
 
         int results[9];
 
@@ -161,7 +186,7 @@ int main() {
             printf("\nAggregate:\t0%d", aggregate);
         }
 
-        save_student_data(name, index_no, aggregate, gender);
+        save_student_data(name, index_no, aggregate, gender, course);
         printf("\nRegister another student?\n1 - Yes\n2 - No\n\tOption: ");
         fflush(stdin);
         scanf("%c", &option);
@@ -204,10 +229,10 @@ int main() {
 
     //Placement Checking Section Begins
     else if(option == '2') {
+        placement_check:
         system("cls");
         print_header("SCHOOL PLACEMENT PROGRAMME");
         int index_number;
-        placement_check:
         printf("Enter student index number: ");
         scanf("%d", &index_number);
         Sleep(300);
@@ -224,10 +249,10 @@ int main() {
             int read_index;
             int true = 0;
         while (fgets(line, sizeof(line), fp)) {
-            char name[50], gender, last_name[50];
+            char name[50], gender, last_name[50], course[20];
             int scores[9];
             int aggregate;
-            sscanf(line, "%s %s %d %d %d %d %d %d %d %d %d %d %d %c", name, last_name, &read_index, &scores[0], &scores[1], &scores[2], &scores[3], &scores[4], &scores[5], &scores[6], &scores[7], &scores[8], &aggregate, &gender);
+            sscanf(line, "%s %s %d %d %d %d %d %d %d %d %d %d %d %c %s", name, last_name, &read_index, &scores[0], &scores[1], &scores[2], &scores[3], &scores[4], &scores[5], &scores[6], &scores[7], &scores[8], &aggregate, &gender, course);
 
             if (read_index == index_number) {
                 int total_score = 0;
@@ -247,10 +272,12 @@ int main() {
                     if (aggregate >= lower_bound && aggregate <= upper_bound) {
                         Sleep(300);
                         system("cls");
-                        printf("NAME\t|\tINDEX NO\t|\tAGGREGATE\t|\tSCHOOL\n");
-                        printf("---------------------------------------------------------------------------\n");
-                        Sleep(800);
-                        printf("%s\t|\t%d  \t|\t   %d  \t\t|\t%s\n", name, index_number, aggregate, choose_school(grade, gender));
+                        printf("NAME  \t\t\t|\tINDEX NO\t|\tAGGREGATE\t|\tSCHOOL\t\n");
+                        printf("-----------------------------------------------------------------------------------------\n");
+                        Sleep(300);
+                        printf("%s %s\t\t|\t%d \t|\t  %d \t\t|\t%s\n", last_name, name, index_number, aggregate, choose_school(grade, gender));
+                        printf("\n\nCOURSE OF STUDY: %s", course);
+                        
                         break;
                     }
                 }
@@ -259,7 +286,7 @@ int main() {
                 char filename[50];
                 sprintf(filename, "%d.txt", index_number);
                 FILE *output_file = fopen(filename, "w");
-                fprintf(output_file, "Name: %s\nIndex number: %d\nSchool: %s\nAggregate: %d\nRaw score: %d", name, index_number, choose_school(grade,gender), aggregate, total_score);
+                fprintf(output_file, "Name: %s\nIndex number: %d\nSchool: %s\n\nAggregate: %d\nRaw score: %d", name, index_number, choose_school(grade,gender), aggregate, total_score);
                 fclose(output_file);
                 true = 1;
             }
@@ -432,13 +459,13 @@ int calculate_aggregate() {
 }
 
 //Function to save student data into a fp
-void save_student_data(char name[], char index[], int aggregate, char gender) {
+void save_student_data(char name[], char index[], int aggregate, char gender, char course[]) {
     //Create File and name it with the index number
     char file_name[50];
     FILE *file_ptr = fopen("students.txt", "a");
 
     //Write to the fp
-    fprintf(file_ptr, "\n%s %s %d %d %d %d %d %d %d %d %d  %d %c", name, index, English, Maths, Science, Social, RME, BDT, GH_lang, French, ICT, aggregate, gender);
+    fprintf(file_ptr, "\n%s %s %d %d %d %d %d %d %d %d %d  %d %c %s", name, index, English, Maths, Science, Social, RME, BDT, GH_lang, French, ICT, aggregate, gender, course);
 
     //Close fp
     fclose(file_ptr);
