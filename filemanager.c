@@ -42,7 +42,7 @@ int main() {
     print_header("MAIN MENU");
     printf("\n1 - REGISTER NEW STUDENT\n2 - PLACEMENT CHECKER\n3 - EXIT\n");
     char option;
-    printf("\n\t### WHERE ARE YOU GOING? ");
+    printf("\n\t### WHERE WOULD YOU LIKE TO GO? ");
     scanf("%c", &option);
 
     if (option == '1') {
@@ -322,10 +322,10 @@ int main() {
         }
         else {
         choose:
-        fflush(stdin);
         Sleep(500);
         print_header("STUDENT PLACEMENT SUCCESSFUL");
         printf("\n1 - Place another student\n2 - Go to main menu\n3 - Exit\n\n\tOption: ");
+        fflush(stdin);
         scanf("%c", &option);
         switch (option)
             {
@@ -344,28 +344,6 @@ int main() {
             default:
                 printf("Invalid option. Please try again\n");
                 goto choose;
-                break;
-            }
-
-        choisir:
-        fflush(stdin);
-        option_menu:
-        print_header("WHERE WOULD YOU LIKE TO GO?");
-        printf("\n1 - Go to main menu\n2 - Exit\n\n\tOption: ");
-        scanf("%c", &option);
-        switch (option)
-            {
-            case '1':
-                goto main_menu;
-                break;
-
-            case '2':
-                goto close;
-                break;
-                
-            default:
-                printf("Invalid option. Please try again\n");
-                goto choisir;
                 break;
             }
     }
@@ -393,7 +371,7 @@ void print_header(char header[]) {
     Sleep(800);
 }
 
-//Function to check for errors when entering scores
+//Function to check for errors when entering scores (Scores must be between 1 and 100)
 int get_grade(int score, char name[]) {
     char c;
     while(1) {
