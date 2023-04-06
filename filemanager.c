@@ -6,6 +6,26 @@
 #include <time.h>
 #include <ctype.h>
 
+/*
+SCHOOL PLACEMENT SYSTEM BY GROUP 14 (COMPUTER ENGINEERING)
+---------------------------------------------------------
+ANKRAH Vince Churchill -    7092021
+
+ESSIEN Ernest Kojo -        7098521
+
+MUSTAPHA Iddriss Hamidu -   7103921
+
+AMETEWEE Ivan Seyram -      7091021
+
+TIJANI Hassan Cissey -      7110021
+
+ESSIEDU Daniel -            7098421
+
+AWUKU Samuel Akoto -        7093721
+
+AYOMA Richard Arthur -      7093921
+*/
+
 //Global Variables and Function declarations
 int English, Maths, Science, Social, RME, BDT, GH_lang, French, ICT;
 int English_grade, Maths_grade, Science_grade, Social_grade, RME_grade, BDT_grade, GH_lang_grade, French_grade, ICT_grade;
